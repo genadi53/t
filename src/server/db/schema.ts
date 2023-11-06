@@ -8,6 +8,7 @@ import {
   text,
   timestamp,
   varchar,
+  boolean,
 } from "drizzle-orm/mysql-core";
 import { type AdapterAccount } from "next-auth/adapters";
 
@@ -33,7 +34,7 @@ export const posts = mysqlTable(
   (example) => ({
     createdByIdIdx: index("createdById_idx").on(example.createdById),
     nameIndex: index("name_idx").on(example.name),
-  })
+  }),
 );
 
 export const users = mysqlTable("user", {
@@ -71,7 +72,7 @@ export const accounts = mysqlTable(
   (account) => ({
     compoundKey: primaryKey(account.provider, account.providerAccountId),
     userIdIdx: index("userId_idx").on(account.userId),
-  })
+  }),
 );
 
 export const accountsRelations = relations(accounts, ({ one }) => ({
@@ -89,7 +90,7 @@ export const sessions = mysqlTable(
   },
   (session) => ({
     userIdIdx: index("userId_idx").on(session.userId),
-  })
+  }),
 );
 
 export const sessionsRelations = relations(sessions, ({ one }) => ({
@@ -105,5 +106,85 @@ export const verificationTokens = mysqlTable(
   },
   (vt) => ({
     compoundKey: primaryKey(vt.identifier, vt.token),
-  })
+  }),
 );
+
+export const games = mysqlTable(
+  "game",
+  {
+    id: varchar("id", { length: 255 }).notNull().primaryKey(),
+    userId: varchar("userId", { length: 255 }).notNull(),
+    hintsLeft: int("hintsLeft").default(0),
+    isSplitAnswersUsed: boolean("isSplitAnswersUsed").default(false),
+    isCallFriendUsed: boolean("isCallFriendUsed").default(false),
+    isGetHelpUsed: boolean("isGetHelpUsed").default(false),
+  },
+  (game) => ({
+    gameIdIdx: index("gameIdIdx").on(game.id),
+  }),
+);
+
+export const gamesRelations = relations(games, ({ many, one }) => ({
+  user: one(users),
+  questions: many(questions),
+  prompts: many(gamePrompts),
+}));
+
+export const gamePrompts = mysqlTable(
+  "gamePrompt",
+  {
+    id: bigint("id", { mode: "number" }).primaryKey().autoincrement(),
+    gameId: varchar("gameId", { length: 255 }).notNull(),
+    input: text("input").notNull(),
+    response: text("responce").notNull(),
+  },
+  (gamePrompt) => ({
+    gameIdIdx: index("gameIdIdx").on(gamePrompt.gameId),
+  }),
+);
+
+export const gamePromptsRelations = relations(gamePrompts, ({ one }) => ({
+  game: one(games),
+}));
+
+export const questions = mysqlTable(
+  "question",
+  {
+    id: bigint("id", { mode: "number" }).primaryKey().autoincrement(),
+    gameId: varchar("gameId", { length: 255 }).notNull(),
+    difficulty: varchar("difficulty", {
+      length: 255,
+      enum: ["easy", "intermediate", "hard"],
+    })
+      .notNull()
+      .default("easy"),
+    questionText: text("questionText").notNull(),
+    explanation: text("explanation"),
+  },
+  (question) => ({
+    gameIdIdx: index("gameIdIdx").on(question.gameId),
+  }),
+);
+
+export const questionsRelations = relations(questions, ({ one, many }) => ({
+  answers: many(answers),
+  game: one(games),
+}));
+
+export const answers = mysqlTable(
+  "answer",
+  {
+    id: bigint("id", { mode: "number" }).primaryKey().autoincrement(),
+    questionId: bigint("questionId", { mode: "number" }).notNull(),
+    answerText: varchar("answerText", { length: 255 }).notNull(),
+    isCorrect: boolean("isCorrect").notNull().default(false),
+    isSelected: boolean("isSelected").default(false),
+  },
+  (answer) => ({
+    questionIdIdx: index("questionIdIdx").on(answer.questionId),
+  }),
+);
+
+export const answersRelations = relations(answers, ({ one }) => ({
+  question: one(questions),
+}));

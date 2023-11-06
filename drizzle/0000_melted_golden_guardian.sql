@@ -13,6 +13,33 @@ CREATE TABLE `code-quest_account` (
 	CONSTRAINT `code-quest_account_provider_providerAccountId` PRIMARY KEY(`provider`,`providerAccountId`)
 );
 --> statement-breakpoint
+CREATE TABLE `code-quest_answer` (
+	`id` bigint AUTO_INCREMENT NOT NULL,
+	`questionId` bigint NOT NULL,
+	`answerText` varchar(255) NOT NULL,
+	`isCorrect` boolean NOT NULL DEFAULT false,
+	`isSelected` boolean DEFAULT false,
+	CONSTRAINT `code-quest_answer_id` PRIMARY KEY(`id`)
+);
+--> statement-breakpoint
+CREATE TABLE `code-quest_gamePrompt` (
+	`id` bigint AUTO_INCREMENT NOT NULL,
+	`gameId` varchar(255) NOT NULL,
+	`input` text NOT NULL,
+	`responce` text NOT NULL,
+	CONSTRAINT `code-quest_gamePrompt_id` PRIMARY KEY(`id`)
+);
+--> statement-breakpoint
+CREATE TABLE `code-quest_game` (
+	`id` varchar(255) NOT NULL,
+	`userId` varchar(255) NOT NULL,
+	`hintsLeft` int DEFAULT 0,
+	`isSplitAnswersUsed` boolean DEFAULT false,
+	`isCallFriendUsed` boolean DEFAULT false,
+	`isGetHelpUsed` boolean DEFAULT false,
+	CONSTRAINT `code-quest_game_id` PRIMARY KEY(`id`)
+);
+--> statement-breakpoint
 CREATE TABLE `code-quest_post` (
 	`id` bigint AUTO_INCREMENT NOT NULL,
 	`name` varchar(256),
@@ -20,6 +47,14 @@ CREATE TABLE `code-quest_post` (
 	`created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	`updatedAt` timestamp ON UPDATE CURRENT_TIMESTAMP,
 	CONSTRAINT `code-quest_post_id` PRIMARY KEY(`id`)
+);
+--> statement-breakpoint
+CREATE TABLE `code-quest_question` (
+	`id` bigint AUTO_INCREMENT NOT NULL,
+	`gameId` varchar(255) NOT NULL,
+	`questionText` text NOT NULL,
+	`explanation` text,
+	CONSTRAINT `code-quest_question_id` PRIMARY KEY(`id`)
 );
 --> statement-breakpoint
 CREATE TABLE `code-quest_session` (
@@ -46,6 +81,10 @@ CREATE TABLE `code-quest_verificationToken` (
 );
 --> statement-breakpoint
 CREATE INDEX `userId_idx` ON `code-quest_account` (`userId`);--> statement-breakpoint
+CREATE INDEX `questionIdIdx` ON `code-quest_answer` (`questionId`);--> statement-breakpoint
+CREATE INDEX `gameIdIdx` ON `code-quest_gamePrompt` (`gameId`);--> statement-breakpoint
+CREATE INDEX `gameIdIdx` ON `code-quest_game` (`id`);--> statement-breakpoint
 CREATE INDEX `createdById_idx` ON `code-quest_post` (`createdById`);--> statement-breakpoint
 CREATE INDEX `name_idx` ON `code-quest_post` (`name`);--> statement-breakpoint
+CREATE INDEX `gameIdIdx` ON `code-quest_question` (`gameId`);--> statement-breakpoint
 CREATE INDEX `userId_idx` ON `code-quest_session` (`userId`);

@@ -1,8 +1,8 @@
 {
   "version": "5",
   "dialect": "mysql",
-  "id": "e1128351-bcf8-47f5-998f-eb636bf6df77",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "d2581141-03ec-4fe0-b7a8-f6f4c4190a97",
+  "prevId": "e1128351-bcf8-47f5-998f-eb636bf6df77",
   "tables": {
     "code-quest_account": {
       "name": "code-quest_account",
@@ -369,6 +369,13 @@
         },
         "gameId": {
           "name": "gameId",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "difficulty": {
+          "name": "difficulty",
           "type": "varchar(255)",
           "primaryKey": false,
           "notNull": true,
