@@ -113,8 +113,10 @@ export const games = mysqlTable(
   "game",
   {
     id: varchar("id", { length: 255 }).notNull().primaryKey(),
-    userId: varchar("userId", { length: 255 }).notNull(),
+    userId: varchar("userId", { length: 255 }),
     hintsLeft: int("hintsLeft").default(0),
+    lives: int("lives").default(1),
+    timeToAnswerSeconds: int("time_to_answer_seconds").default(0),
     isSplitAnswersUsed: boolean("isSplitAnswersUsed").default(false),
     isCallFriendUsed: boolean("isCallFriendUsed").default(false),
     isGetHelpUsed: boolean("isGetHelpUsed").default(false),
