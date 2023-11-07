@@ -15,6 +15,13 @@
       "when": 1699287326678,
       "tag": "0001_deep_obadiah_stane",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1699371631184,
+      "tag": "0002_workable_lilandra",
+      "breakpoints": true
     }
   ]
 }
