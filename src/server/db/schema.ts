@@ -114,8 +114,10 @@ export const games = mysqlTable(
   {
     id: varchar("id", { length: 255 }).notNull().primaryKey(),
     userId: varchar("userId", { length: 255 }),
+    score: int("score").default(0),
     hintsLeft: int("hintsLeft").default(0),
     lifes: int("lifes").default(1),
+    isGameOver: boolean("isGameOver").default(false),
     timeToAnswerSeconds: int("time_to_answer_seconds").default(0),
     isSplitAnswersUsed: boolean("isSplitAnswersUsed").default(false),
     isCallFriendUsed: boolean("isCallFriendUsed").default(false),
@@ -137,6 +139,7 @@ export const gamePrompts = mysqlTable(
   {
     id: bigint("id", { mode: "number" }).primaryKey().autoincrement(),
     gameId: varchar("gameId", { length: 255 }).notNull(),
+    number: int("number").notNull().default(1),
     input: text("input").notNull(),
     response: text("responce").notNull(),
   },
@@ -153,10 +156,12 @@ export const questions = mysqlTable(
   "question",
   {
     id: bigint("id", { mode: "number" }).primaryKey().autoincrement(),
+    number: int("number").notNull().default(1),
+    theme: varchar("theme", { length: 255 }),
     gameId: varchar("gameId", { length: 255 }).notNull(),
     difficulty: varchar("difficulty", {
       length: 255,
-      enum: ["easy", "intermediate", "hard"],
+      enum: ["easy", "intermediate", "hard", "expert"],
     })
       .notNull()
       .default("easy"),
