@@ -20,5 +20,9 @@ export function useCountdown(
     return () => clearTimeout(timeout);
   }, [secondsLeft]);
 
-  return { secondsLeft };
+  function start(seconds: number) {
+    setSecondsLeft(seconds);
+  }
+
+  return { secondsLeft, start };
 }

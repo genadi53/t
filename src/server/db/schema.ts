@@ -119,10 +119,11 @@ export const games = mysqlTable(
     lifes: int("lifes").default(1),
     totalQuestions: int("totalQuestions").notNull().default(15),
     isGameOver: boolean("isGameOver").default(false),
+    isGameWon: boolean("isGameWon").default(false),
     timeToAnswerSeconds: int("time_to_answer_seconds").default(0),
     isSplitAnswersUsed: boolean("isSplitAnswersUsed").default(false),
     isCallFriendUsed: boolean("isCallFriendUsed").default(false),
-    isGetHelpUsed: boolean("isGetHelpUsed").default(false),
+    isAudienceUsed: boolean("isAudienceUsed").default(false),
   },
   (game) => ({
     gameIdIdx: index("gameIdIdx").on(game.id),
