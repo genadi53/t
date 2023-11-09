@@ -8,4 +8,6 @@ export const CONSTANTS = {
   LIFES_EASY: 3,
   LIFES_INTERMEDIATE: 1,
   LIFES_HARD: 1,
+  MAX_SCORE: 15,
+  INITIAL_SCORE: 0,
 } as const;

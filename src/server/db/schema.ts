@@ -117,6 +117,7 @@ export const games = mysqlTable(
     score: int("score").default(0),
     hintsLeft: int("hintsLeft").default(0),
     lifes: int("lifes").default(1),
+    totalQuestions: int("totalQuestions").notNull().default(15),
     isGameOver: boolean("isGameOver").default(false),
     timeToAnswerSeconds: int("time_to_answer_seconds").default(0),
     isSplitAnswersUsed: boolean("isSplitAnswersUsed").default(false),
