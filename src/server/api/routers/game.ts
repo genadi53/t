@@ -6,6 +6,8 @@ import { mapDifficulty } from "@/utils/mapDifficulty";
 import { v4 as uuidv4 } from "uuid";
 import { mockQuestions } from "@/utils/mock";
 import { type QuestionDifficulty } from "@/utils/types";
+import { eq } from "drizzle-orm";
+import { CONSTANTS } from "@/utils/constants";
 
 type a = { text: string; isCorrect: boolean };
 const mapToDbAnswers = (answers: a[], questionId: number) => {
@@ -90,6 +92,40 @@ export const gameRouter = createTRPCRouter({
         });
 
         return question;
+      } catch (error) {
+        console.error(error);
+        return null;
+      }
+    }),
+
+  endTheGame: publicProcedure
+    .input(
+      z.object({
+        gameId: z.string(),
+        score: z.number().nonnegative(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      try {
+        const game = await ctx.db.query.games.findFirst({
+          where: (games, { eq }) => eq(games.id, input.gameId),
+        });
+
+        if (!game) {
+          throw new Error("No such game!");
+        }
+
+        const isGameWon = game.totalQuestions === input.score ? true : false;
+        await ctx.db
+          .update(games)
+          .set({ isGameOver: true, score: input.score, isGameWon })
+          .where(eq(games.id, input.gameId));
+
+        return {
+          ...game,
+          score: input.score,
+          isGameOver: false,
+        };
       } catch (error) {
         console.error(error);
         return null;

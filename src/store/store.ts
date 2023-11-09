@@ -79,6 +79,7 @@ export const useGameStore = create<GameState & Action>((set) => ({
       ...state,
       score: state.score + 1,
       isGameOver: state.score === CONSTANTS.MAX_SCORE ? true : false,
+      isGameWon: state.score === CONSTANTS.MAX_SCORE ? true : false,
     })),
   useSplit: () => set((state) => ({ ...state, isSplitAnswersUsed: true })),
   useCallFriend: () => set((state) => ({ ...state, isCallFriendUsed: true })),

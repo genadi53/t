@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import Lottie, { type LottieRefCurrentProps } from "lottie-react";
 import animationData from "@/../public/hourglass-animation.json";
 import { useCountdown } from "@/hooks/useCountdown";
@@ -8,12 +8,24 @@ type TimerProps = {
   seconds: number;
   size?: string | number;
   onFinish: () => void;
+  reset: boolean;
   // onReset: () => void;
 };
 
-export const Timer: React.FC<TimerProps> = ({ size, onFinish, seconds }) => {
+export const Timer: React.FC<TimerProps> = ({
+  size,
+  onFinish,
+  seconds,
+  reset,
+}) => {
   const animationRef = useRef<LottieRefCurrentProps>(null);
-  const { secondsLeft } = useCountdown(seconds, onFinish);
+  const { secondsLeft, start } = useCountdown(seconds, onFinish);
+
+  useEffect(() => {
+    if (reset) {
+      start(seconds);
+    }
+  }, [reset, seconds, start]);
 
   return (
     <div
