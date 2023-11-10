@@ -10,4 +10,5 @@ export const CONSTANTS = {
   LIFES_HARD: 1,
   MAX_SCORE: 15,
   INITIAL_SCORE: 0,
+  GREET_INTERVAL: 7500,
 } as const;

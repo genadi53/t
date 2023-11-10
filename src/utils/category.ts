@@ -1,6 +1,4 @@
-function getRandomNumber(min: number, max: number) {
-  return Math.floor(Math.random() * (max - min) + min);
-}
+import { getRandomNumber } from "./random";
 
 export function generateRandomCategory() {
   return categories[getRandomNumber(0, categories.length)];
